@@ -26,7 +26,6 @@ export class contacts1604020919673 implements MigrationInterface {
                 {
                     name: "user_id",
                     type: "integer",
-                    isUnique: true,
                 }
             ],
             foreignKeys: [

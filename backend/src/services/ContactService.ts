@@ -53,9 +53,8 @@ export default {
         const contactRepository = getRepository(Contact);
     
         const contacts = await contactRepository.find({
-            relations: ['users']
+            relations: ['user', 'account']
         });
-
         return contacts;
     },
 

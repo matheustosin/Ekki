@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './styles.css'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
@@ -15,13 +15,13 @@ export default function Contact() {
     const [modalTransferShow, setModalTransferShow] = useState(false);
     const [name, setName] = useState("");
     const [account, setAccount] = useState("");
+    const [listContacts, setListContacts] = useState([]);
 
-
-    // useEffect(() => {
-    //     api.get("/user/1").then(response => {
-    //         setUser(response.data);
-    //     });
-    // },[]);
+    useEffect(() => {
+        api.get("/contact").then(response => {
+            setListContacts(response.data);
+        });
+    },[]);
 
     const openModalRegister = () => {
         setModalRegisterShow(true);
@@ -33,7 +33,7 @@ export default function Contact() {
 
     const saveContact = () => {
         const contactRequest = {
-            nome: name, 
+            name: name, 
             accountNumber: account,
         }
         api.post('/contact', contactRequest).then( response => {
@@ -43,8 +43,6 @@ export default function Contact() {
         }).catch(error => {
             swal("Ops!", error.message, "error");
         })
-
-        
     }
 
     const transfer = () => {
@@ -71,14 +69,21 @@ export default function Contact() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td className="center">
-                                <Button variant="secondary" onClick={() => openModalTransfer()}>Transferir</Button>
-                                <BsTrash className="pointer" size={25} color="red" onClick={() => deleteContact()}/>
-                            </td>
-                        </tr>
+                        {
+                            listContacts && listContacts.map(e => {
+                                return(
+                                    <tr>
+                                        <td>{e.name}</td>
+                                        <td>{e.accountNumber}</td>
+                                        <td className="center">
+                                            <Button variant="secondary" onClick={() => openModalTransfer()}>Transferir</Button>
+                                            <BsTrash className="pointer" size={25} color="red" onClick={() => deleteContact()}/>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
+                        
                     </tbody>
                 </Table>
             </div>
