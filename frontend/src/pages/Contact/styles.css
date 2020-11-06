@@ -1,0 +1,41 @@
+#contact {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+}
+
+.center {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.button-add-contact {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 10px;
+    box-sizing: border-box;
+}
+
+#contact .content {
+    display: flex;
+    justify-content: center;
+    height: 80%;
+    overflow: auto;
+}
+
+#contact .table {
+    width: 80% !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+#contact .return {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}

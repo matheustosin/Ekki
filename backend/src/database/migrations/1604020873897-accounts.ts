@@ -15,11 +15,16 @@ export class accounts1604020873897 implements MigrationInterface {
                     generationStrategy: "increment"
                 },
                 {
+                    name: "nr_account",
+                    type: "integer",
+                    isUnique: true
+                },
+                {
                     name: "balance",
                     type: "float",
                 },
                 {
-                    name: "limit",
+                    name: "limit_value",
                     type: "float",
                 }
             ]

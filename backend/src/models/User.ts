@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, JoinColumn } from 'typeorm';
 
 import Account from './Account';
+import Contact from './Contact';
 
 @Entity("users")
 export default class User {
@@ -12,7 +13,6 @@ export default class User {
 
     @Column()
     cpf: string;
-
     
     @Column()
     phone: string;
@@ -20,4 +20,10 @@ export default class User {
     @OneToOne(type => Account )
     @JoinColumn({ name: 'account_id' })
     account: Account;
+
+    @OneToMany(() => Contact, contact => contact.user, {
+        cascade: ['insert', 'update']
+    })
+    @JoinColumn({ name: 'user_id' })
+    contacts: Contact[];
 }

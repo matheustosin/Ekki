@@ -1,37 +1,45 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import * as Yup from 'yup';
 
-import Account from '../models/Account';
+import AccountService from '../services/AccountService';
 
 export default {
     async create(request: Request, response: Response) {
-        const { 
-            name,
+        const {
+            accountNumber,
             balance,
         } = request.body;
 
-        const schemaRequest = Yup.object().shape({
-            name: Yup.string().required(),
-            balance: Yup.number().required(),
-            limit: Yup.number().required()
-        });
+        const data = {
+            accountNumber,
+            balance
+        }
 
-        await schemaRequest.validate(request.body, {
-            abortEarly: false
-        });
-
-        const accountRepository = getRepository(Account);
-
-        const data = { 
-            name,
-            balance,
-            limit: 500
-        };
-        const account = accountRepository.create(data);
-
-        await accountRepository.save(account);
+        const account = AccountService.create(data);
 
         return response.status(201).json(account);
-    }
+    },
+    
+    async index(request: Request, response: Response) {
+        
+        const accounts = await AccountService.index();
+
+        return response.json(accounts);
+    },
+
+    async transfer(request: Request, response: Response) {
+        const {
+            accountNumber,
+            value
+        } = request.body;
+
+        const data = {
+            accountNumber,
+            value
+        }
+
+        const usedLimit = await AccountService.transfer(data);
+
+        return response.json({ usedLimit: usedLimit });
+    },
+
 }

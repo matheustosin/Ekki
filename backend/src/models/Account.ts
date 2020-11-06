@@ -6,8 +6,11 @@ export default class Account {
     id: number;
 
     @Column()
+    nr_account: number;
+
+    @Column()
     balance: number;
 
     @Column()
-    limit: number;
+    limit_value: number;
 }

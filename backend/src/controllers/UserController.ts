@@ -1,43 +1,42 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import * as Yup from 'yup';
+import AccountService from '../services/AccountService';
 
-import User from '../models/User';
-import AccountController from '../controllers/AccountController';
+import UserService from '../services/UserService';
 
 export default {
     async create(request: Request, response: Response) {
         const { 
             name,
             cpf,
-            phone
+            phone,
+            accountNumber
         } = request.body;
 
-        const schemaRequest = Yup.object().shape({
-            name: Yup.string().required(),
-            cpf: Yup.string().required(),
-            phone: Yup.string().required()
-        });
-
-        await schemaRequest.validate(request.body, {
-            abortEarly: false
-        });
-
-        const userRepository = getRepository(User);
-
-        // const account = AccountController.create()
-
-        const data = { 
+        const data = {
             name,
             cpf,
-            phone
-        };
-        const user = userRepository.create(data);
+            phone,
+            accountNumber
+        }
 
-        await userRepository.save(user);
-
+        const user = await UserService.create(data);
+        
         return response.status(201).json(user);
-    }
+    },
 
-   
+    async show(request: Request, response: Response) {
+        const { id } = request.params;
+
+        const user = await UserService.show(Number(id));
+
+        return response.json(user);
+    },
+
+    async index(request: Request, response: Response) {
+        
+        const users = await UserService.index();
+
+        return response.json(users);
+    },
+
 }

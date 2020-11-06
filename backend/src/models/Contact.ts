@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, ManyToOne, JoinColumn } from 'typeorm';
 
 import Account from './Account';
 import User from './User';
@@ -15,7 +15,7 @@ export default class Contact {
     @JoinColumn({ name: 'account_id' })
     account: Account;
 
-    @OneToOne(() => User )
+    @ManyToOne(() => User, user => user.contacts)
     @JoinColumn({ name: 'user_id' })
     user: User;
 }
