@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import User from '../models/User';
 import Contact from '../models/Contact';
 import TransferHistory from '../models/TransferHistory';
+import UserService from './UserService';
+import ContactService from './ContactService';
 
 interface TransferHistoryRequest {
     value: number,
@@ -47,6 +49,20 @@ export default {
         return transferHistory;
     },
 
-    
+    async getExtractByIdUser(idUser: number) {
+        const schemaRequest =  Yup.number().required();
+
+        await schemaRequest.validate(idUser, {
+            abortEarly: false
+        });
+
+        const transferHistoryRepository = getRepository(TransferHistory);
+        
+        const query = `select * from transfer_history th join contacts c on th.contact_id = c.id join accounts a on c.account_id = a.id where th.user_id = ${idUser}`;
+        
+        const extract = await transferHistoryRepository.query(query);
+        
+        return extract;
+    }
 
 }

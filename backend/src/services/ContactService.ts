@@ -55,6 +55,7 @@ export default {
         const contacts = await contactRepository.find({
             relations: ['user', 'account']
         });
+
         return contacts;
     },
 
@@ -65,14 +66,38 @@ export default {
 
         contactRepository.update(id, contact);
     },
+
+    async delete(id: number) {
+        const contactRepository = getRepository(Contact);
+
+        contactRepository.delete(id);
+    },
     
     async findByAccountNumber(accountNumber: number) {
         const contactRepository = getRepository(Contact);
     
-        const contact = await contactRepository.findOneOrFail(1, {
+        const account = await AccountService.findAccountByAccountNumber(accountNumber);
+        const contact = await contactRepository.findOneOrFail({
+            where: {
+                account: account
+            },
             relations: ['account']
         });
     
         return contact;
-    }
+    },
+
+    async findById(id: number) {
+        const contactRepository = getRepository(Contact);
+    
+        const contact = await contactRepository.findOneOrFail({
+            where: {
+                id: id
+            },
+            relations: ['account']
+        });
+    
+        return contact;
+    },
+    
 }

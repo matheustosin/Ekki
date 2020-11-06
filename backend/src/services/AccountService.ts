@@ -84,6 +84,7 @@ export default {
 
         // LOGGED USER
         const user = await UserService.show(1);
+
         const contact = await ContactService.findByAccountNumber(accountNumber);
 
         const verifyBalance = user.account.balance - value;    
@@ -117,5 +118,17 @@ export default {
         await TransferHistoryService.create(history);
 
         return usedLimit;
+    },
+
+    async findAccountByAccountNumber(accountNumber: number) {
+        const accountRepository = getRepository(Account);
+
+        const account = await accountRepository.findOneOrFail({
+            where: {
+                nr_account: accountNumber
+            }
+        });
+         
+        return account;
     }
 }

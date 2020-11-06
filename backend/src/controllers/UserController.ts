@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import AccountService from '../services/AccountService';
 
 import UserService from '../services/UserService';
 
@@ -38,5 +37,11 @@ export default {
 
         return response.json(users);
     },
+
+    async getExtract(request: Request, response: Response) {
+        const extract = await UserService.getExtract();
+        
+        return response.json(extract);
+    }
 
 }

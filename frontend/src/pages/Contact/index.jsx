@@ -17,17 +17,23 @@ export default function Contact() {
     const [account, setAccount] = useState("");
     const [listContacts, setListContacts] = useState([]);
 
+    const [valueToTransfer, setValueToTransfer] = useState(0);
+    const [contact, setContact] = useState({});
+
     useEffect(() => {
         api.get("/contact").then(response => {
             setListContacts(response.data);
-        });
-    },[]);
+        }).catch(error => {
+            swal("Ops!", error.message, "error");
+        });;
+    },[listContacts]);
 
     const openModalRegister = () => {
         setModalRegisterShow(true);
     }
 
-    const openModalTransfer = () => {
+    const openModalTransfer = (contact) => {
+        setContact(contact);
         setModalTransferShow(true);
     }
 
@@ -42,15 +48,34 @@ export default function Contact() {
             }
         }).catch(error => {
             swal("Ops!", error.message, "error");
-        })
+        });
+    }
+
+    const deleteContact = (contact) => {
+        const id = contact.id;
+        api.delete(`/contact/${id}`).then(response => {
+            if (response.status === 200) {
+                swal("Sucesso!", "Contato removido com sucesso!", "success");
+            }
+        }).catch(error => {
+            swal("Ops!", error.message, "error");
+        });
     }
 
     const transfer = () => {
-        swal("contato salvo", "success");
-    }
-
-    const deleteContact = () => {
-        swal("contato salvo", "success");   
+        const transferRequest = {
+            accountNumber: contact.account.nr_account,
+            value: valueToTransfer
+        }
+        console.log(transferRequest)
+        api.post('/account/transfer', transferRequest).then(response => {
+            if (response.status === 200) {
+                swal("Sucesso!", "Transferência realizada com sucesso!", "success");
+            }
+        }).catch(error => {
+            swal("Ops!", error.message, "error");
+        });
+        
     }
 
     return(
@@ -74,10 +99,10 @@ export default function Contact() {
                                 return(
                                     <tr>
                                         <td>{e.name}</td>
-                                        <td>{e.accountNumber}</td>
+                                        <td>{e.account.nr_account}</td>
                                         <td className="center">
-                                            <Button variant="secondary" onClick={() => openModalTransfer()}>Transferir</Button>
-                                            <BsTrash className="pointer" size={25} color="red" onClick={() => deleteContact()}/>
+                                            <Button variant="secondary" onClick={() => openModalTransfer(e)}>Transferir</Button>
+                                            <BsTrash className="pointer" size={25} color="red" onClick={() => deleteContact(e)}/>
                                         </td>
                                     </tr>
                                 )
@@ -104,11 +129,16 @@ export default function Contact() {
                     </Form.Group>
                 </Form>
             </CustomModal>
-            <CustomModal show={modalTransferShow} onHide={() => setModalTransferShow(false)} title={"Transferir"} eventsave={transfer}>
+            <CustomModal
+                show={modalTransferShow}
+                onHide={() => setModalTransferShow(false)}
+                title={"Transferir"}
+                eventsave={transfer}
+            >
                 <Form>
                     <Form.Group>
                         <Form.Label>Valor R$</Form.Label>
-                        <Form.Control onChange={event => setName(event.target.value)} placeholder="Insira um valor" />
+                        <Form.Control onChange={event => setValueToTransfer(event.target.value)} placeholder="Insira um valor" />
                     </Form.Group>
                 </Form>
             </CustomModal>

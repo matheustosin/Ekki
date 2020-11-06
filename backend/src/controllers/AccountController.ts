@@ -36,7 +36,6 @@ export default {
             accountNumber,
             value
         }
-
         const usedLimit = await AccountService.transfer(data);
 
         return response.json({ usedLimit: usedLimit });

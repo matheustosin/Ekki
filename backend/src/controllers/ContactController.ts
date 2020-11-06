@@ -25,6 +25,14 @@ export default {
         return response.json(contacts);
     },
 
+    async delete(request: Request, response: Response) {
+        const { id } = request.params;
+
+        const contacts = await ContactService.delete(Number(id));
+
+        return response.json(contacts);
+    },
+
     async findByAccountNumber(request: Request, response: Response) {
         const { 
             accountNumber

@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import  {Link} from 'react-router-dom';
 import './styles.css'
 import Table from 'react-bootstrap/Table'
 import { BsArrowLeftShort } from "react-icons/bs";
+import swal from 'sweetalert';
+import api from '../../services/Api';
 
 export default function Extract() {
+
+    const [extract, setExtract] = useState();
     
+    useEffect(() => {
+        api.get("/user/extract/transfers").then(response => {
+            setExtract(response.data);
+        }).catch(error => {
+            swal("Ops!", error.message, "error");
+        });
+    },[]);
+
     return(
         <div id="extract">
             <div className="title-extract">
@@ -22,12 +34,18 @@ export default function Extract() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>JOAO</td>
-                            <td>7897897</td>
-                            <td>5.000,00</td>
-                            <td>01/01/2020</td>
-                        </tr>
+                        {
+                            extract && extract.map(e => {
+                                return (
+                                    <tr>
+                                        <td>{e.name}</td>
+                                        <td>{e.nr_account}</td>
+                                        <td>{e.value}</td>
+                                        <td>{e.dt_transfer}</td>
+                                    </tr>
+                                )
+                            })
+                        }
                     </tbody>
                 </Table>
             </div>

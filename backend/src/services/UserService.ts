@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 
 import User from '../models/User';
 import AccountService from '../services/AccountService';
+import TransferHistoryService from './TransferHistoryService';
 
 interface UserRequest {
     name: string,
@@ -80,5 +81,13 @@ export default {
 
         userRepository.update(id, user);
     },
-   
+
+    async getExtract() {
+        const idUser = 1;
+
+        const extract = await TransferHistoryService.getExtractByIdUser(idUser);
+        
+        return extract;
+    },
+    
 }
